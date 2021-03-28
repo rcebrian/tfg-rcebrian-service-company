@@ -1,5 +1,5 @@
 {
-  "name": "tfg-rcebrian-service-template",
+  "name": "tfg-rcebrian-service-company",
   "version": "1.0.0",
   "description": "TS express template",
   "main": "dist/src/index.js",
@@ -11,14 +11,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/rcebrian/tfg-rcebrian-service-template.git"
+    "url": "git+https://github.com/rcebrian/tfg-rcebrian-service-company.git"
   },
   "author": "rcebrian",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/rcebrian/tfg-rcebrian-service-template/issues"
+    "url": "https://github.com/rcebrian/tfg-rcebrian-service-company/issues"
   },
-  "homepage": "https://github.com/rcebrian/tfg-rcebrian-service-template#readme",
+  "homepage": "https://github.com/rcebrian/tfg-rcebrian-service-company#readme",
   "devDependencies": {
     "@jest/globals": "^26.6.2",
     "@types/express": "^4.17.11",
