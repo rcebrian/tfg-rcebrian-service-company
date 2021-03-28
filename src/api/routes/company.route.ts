@@ -1,8 +1,8 @@
 import { Router } from 'express';
-import { findAll } from '../controllers/company.controller';
+import { create } from '../controllers/company.controller';
 
 const router = Router();
 
-router.route('/').get(findAll);
+router.route('/').post(create);
 
 export { router as companyRoutes };
