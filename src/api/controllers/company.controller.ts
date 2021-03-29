@@ -26,7 +26,7 @@ export const create = (req: Request, res: Response) => {
 export const findAll = (req: Request, res: Response) => {
   Company.findAll()
     .then((data) => {
-      res.status(httpStatus.OK).json(data);
+      res.status(httpStatus.OK).json({ data });
     }).catch((err) => {
       res.status(httpStatus.INTERNAL_SERVER_ERROR)
         .json({ error: err });
