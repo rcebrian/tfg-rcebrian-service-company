@@ -15,8 +15,7 @@ describe('CONTROLLER /company', () => {
     };
     it('should be 201 - CREATED', async () => {
       const result = await request(app).post(URI).send(COMPANY);
-      expect(result.body.company).toMatchObject(COMPANY);
-      expect(result.body._links.self.href).toContain(`/api/company/${result.body.company.id}`);
+      expect(result.body.data).toMatchObject(COMPANY);
       expect(result.status).toBe(httpStatus.CREATED);
     });
 
