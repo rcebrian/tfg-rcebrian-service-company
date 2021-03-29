@@ -26,4 +26,12 @@ describe('CONTROLLER /company', () => {
       expect(result.status).toBe(httpStatus.BAD_REQUEST);
     });
   });
+
+  describe('GET /company', () => {
+    it('should be 200 - OK', async () => {
+      const result = await request(app).get(URI);
+      expect(result.status).toBe(httpStatus.OK);
+      expect(result.body.data.length).toBeGreaterThan(0);
+    });
+  });
 });
