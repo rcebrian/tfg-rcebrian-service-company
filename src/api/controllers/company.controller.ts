@@ -25,3 +25,18 @@ export const create = (req: Request, res: Response) => {
       .json({ error: err });
   });
 };
+
+/**
+ * Get all companies from database
+ * @param req GET method
+ * @param res List of companies
+ */
+export const findAll = (req: Request, res: Response) => {
+  Company.findAll()
+    .then((data) => {
+      res.status(httpStatus.OK).json(data);
+    }).catch((err) => {
+      res.status(httpStatus.INTERNAL_SERVER_ERROR)
+        .json({ error: err });
+    });
+};
