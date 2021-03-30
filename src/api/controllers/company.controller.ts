@@ -32,3 +32,20 @@ export const findAll = (req: Request, res: Response) => {
         .json({ error: err });
     });
 };
+
+/**
+ * Get a company from database filtered by id
+ * @param req GET method with company id as path param
+ * @param res one company or empty
+ */
+export const findById = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  Company.findOne({ where: { id } }).then((data) => {
+    res.status(httpStatus.OK)
+      .json({ data });
+  }).catch((err) => {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ err: err.message });
+  });
+};
