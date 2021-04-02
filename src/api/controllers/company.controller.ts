@@ -49,3 +49,20 @@ export const findById = (req: Request, res: Response) => {
       .json({ err: err.message });
   });
 };
+
+/**
+ * Get a company from database filtered by id
+ * @param req GET method with company id as path param
+ * @param res one company or empty
+ */
+export const remove = (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  Company.destroy({ where: { id } }).then((data) => {
+    res.status(httpStatus.NO_CONTENT)
+      .json({ data });
+  }).catch((err) => {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ err: err.message });
+  });
+};
