@@ -8,13 +8,17 @@ import app from '../../src/config/express.config';
 describe('CONTROLLER /company', () => {
   const URI = '/api/company';
 
+  const COMPANY = {
+    name: 'TEST COMPANY NAME',
+    description: 'TEST DESCRIPTION',
+  };
+
+  let newCompanyId: number;
+
   describe('POST /company', () => {
-    const COMPANY = {
-      name: 'TEST COMPANY NAME',
-      description: 'TEST DESCRIPTION',
-    };
     it('should be 201 - CREATED', async () => {
       const result = await request(app).post(URI).send(COMPANY);
+      newCompanyId = result.body.data.id;
       expect(result.body.data).toMatchObject(COMPANY);
       expect(result.status).toBe(httpStatus.CREATED);
     });
@@ -32,6 +36,21 @@ describe('CONTROLLER /company', () => {
       const result = await request(app).get(URI);
       expect(result.status).toBe(httpStatus.OK);
       expect(result.body.data.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('GET /company/:id', () => {
+    it('should be 200 - OK', async () => {
+      const result = await request(app).get(`${URI}/${newCompanyId}`);
+      expect(result.status).toBe(httpStatus.OK);
+      expect(result.body.data).toMatchObject(COMPANY);
+    });
+  });
+
+  describe('DELETE /company/:id', () => {
+    it('should be 204 - NO CONTENT', async () => {
+      const result = await request(app).delete(`${URI}/${newCompanyId}`);
+      expect(result.status).toBe(httpStatus.NO_CONTENT);
     });
   });
 });
