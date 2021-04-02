@@ -27,4 +27,4 @@ sequelize.authenticate()
 
 export default sequelize;
 
-export { Company };
+export { Company, Group };
