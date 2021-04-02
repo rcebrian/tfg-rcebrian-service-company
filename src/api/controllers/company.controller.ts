@@ -51,9 +51,32 @@ export const findById = (req: Request, res: Response) => {
 };
 
 /**
- * Get a company from database filtered by id
- * @param req GET method with company id as path param
- * @param res one company or empty
+ * Update a company from database filtered by id
+ * @param req PUT method with company id as path param
+ * @param res ACCEPTED company with new attributes
+ */
+export const update = (req: Request, res: Response) => {
+  const { id } = req.params;
+  const company = req.body;
+  Company.update(
+    {
+      name: company.name,
+      description: company.description,
+    },
+    { where: { id } },
+  ).then(() => {
+    res.status(httpStatus.ACCEPTED)
+      .json();
+  }).catch((err) => {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: err });
+  });
+};
+
+/**
+ * Delete a company from database filtered by id
+ * @param req DELETE method with company id as path param
+ * @param res NO CONTENT
  */
 export const remove = (req: Request, res: Response) => {
   const { id } = req.params;
