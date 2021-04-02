@@ -53,4 +53,15 @@ describe('CONTROLLER /company', () => {
       expect(result.status).toBe(httpStatus.NO_CONTENT);
     });
   });
+
+  describe('PUT /company/:id', () => {
+    const TO_UPDATE_COMPANY = {
+      name: 'Updated name',
+      description: 'Updated description',
+    };
+    it('should be 202 - ACCEPTED', async () => {
+      const result = await request(app).put(`${URI}/${newCompanyId}`).send(TO_UPDATE_COMPANY);
+      expect(result.status).toBe(httpStatus.ACCEPTED);
+    });
+  });
 });
