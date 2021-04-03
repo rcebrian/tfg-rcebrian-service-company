@@ -39,3 +39,28 @@ export const findAll = (req: Request, res: Response) => {
       .json({ error: err });
   });
 };
+
+/**
+ * Update a company from database filtered by id
+ * @param req PUT method with company id as path param
+ * @param res ACCEPTED company with new attributes
+ */
+export const update = (req: Request, res: Response) => {
+  const { companyId, groupId } = req.params;
+  const group = req.body;
+  Group.update(
+    {
+      name: group.name,
+      description: group.description,
+    },
+    { where: { companyId, id: groupId } },
+  ).then(() => {
+    res.status(httpStatus.ACCEPTED)
+      .json();
+  }).catch((err: ValidationError) => {
+    res.status(httpStatus.BAD_REQUEST).json({ errors: err.message.split('\n') });
+  }).catch((err) => {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ error: err });
+  });
+};
