@@ -69,4 +69,11 @@ describe('CONTROLLER /company', () => {
       expect(result.status).toBe(httpStatus.ACCEPTED);
     });
   });
+
+  describe('DELETE /company/{companyId}/groups/{groupId}', () => {
+    it('should be 204 - NO CONTENT', async () => {
+      const result = await request(app).delete(`${URI}/${newGroupId}`);
+      expect(result.status).toBe(httpStatus.NO_CONTENT);
+    });
+  });
 });
