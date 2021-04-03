@@ -39,4 +39,13 @@ describe('CONTROLLER /company', () => {
       expect(result.status).toBe(httpStatus.BAD_REQUEST);
     });
   });
+
+  describe('GET /company/{companyId}/groups', () => {
+    it('should be 200 - CREATED', async () => {
+      const result = await request(app).get(URI);
+      expect(result.status).toBe(httpStatus.OK);
+      expect(result.body.data).toBeDefined();
+      expect(result.body.data.length).toBeGreaterThan(0);
+    });
+  });
 });
