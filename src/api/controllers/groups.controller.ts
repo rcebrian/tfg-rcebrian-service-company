@@ -81,3 +81,20 @@ export const update = (req: Request, res: Response) => {
       .json({ error: err });
   });
 };
+
+/**
+ * Delete a group from database filtered by id in a company
+ * @param req DELETE method with company and group id as path param
+ * @param res NO CONTENT
+ */
+export const remove = (req: Request, res: Response) => {
+  const { companyId, groupId } = req.params;
+
+  Group.destroy({ where: { companyId, id: groupId } }).then((data) => {
+    res.status(httpStatus.NO_CONTENT)
+      .json({ data });
+  }).catch((err) => {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ err: err.message });
+  });
+};
