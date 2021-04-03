@@ -41,6 +41,23 @@ export const findAll = (req: Request, res: Response) => {
 };
 
 /**
+ * Get a group from database filtered by id in a company
+ * @param req GET method with company id as path param
+ * @param res one group or empty
+ */
+export const findById = (req: Request, res: Response) => {
+  const { companyId, groupId } = req.params;
+
+  Group.findOne({ where: { companyId, id: groupId } }).then((data) => {
+    res.status(httpStatus.OK)
+      .json({ data });
+  }).catch((err) => {
+    res.status(httpStatus.INTERNAL_SERVER_ERROR)
+      .json({ err: err.message });
+  });
+};
+
+/**
  * Update a company from database filtered by id
  * @param req PUT method with company id as path param
  * @param res ACCEPTED company with new attributes

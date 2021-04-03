@@ -9,6 +9,7 @@ describe('CONTROLLER /company', () => {
   const COMPANY_URI = '/api/company';
   let companyResponse: any;
   let URI : string;
+  let newGroupId : number;
 
   const COMPANY = {
     name: 'COMPANY TEST',
@@ -28,6 +29,7 @@ describe('CONTROLLER /company', () => {
   describe('POST /company/{companyId}/groups', () => {
     it('should be 201 - CREATED', async () => {
       const result = await request(app).post(URI).send(GROUP);
+      newGroupId = result.body.data.id;
       expect(result.status).toBe(httpStatus.CREATED);
       expect(result.body.data).toMatchObject(GROUP);
     });
@@ -41,11 +43,19 @@ describe('CONTROLLER /company', () => {
   });
 
   describe('GET /company/{companyId}/groups', () => {
-    it('should be 200 - CREATED', async () => {
+    it('should be 200 - OK', async () => {
       const result = await request(app).get(URI);
       expect(result.status).toBe(httpStatus.OK);
       expect(result.body.data).toBeDefined();
       expect(result.body.data.length).toBeGreaterThan(0);
+    });
+  });
+
+  describe('GET /company/{companyId}/groups/{groupId}', () => {
+    it('should be 200 - OK', async () => {
+      const result = await request(app).get(`${URI}/${newGroupId}`);
+      expect(result.status).toBe(httpStatus.OK);
+      expect(result.body.data).toMatchObject(GROUP);
     });
   });
 });
