@@ -58,4 +58,15 @@ describe('CONTROLLER /company', () => {
       expect(result.body.data).toMatchObject(GROUP);
     });
   });
+
+  describe('PUT /company/{companyId}/groups/{groupId}', () => {
+    const TO_UPDATE_GROUP = {
+      name: 'Updated name',
+      description: 'Updated description',
+    };
+    it('should be 202 - ACCEPTED', async () => {
+      const result = await request(app).put(`${URI}/${newGroupId}`).send(TO_UPDATE_GROUP);
+      expect(result.status).toBe(httpStatus.ACCEPTED);
+    });
+  });
 });
