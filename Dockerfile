@@ -26,7 +26,6 @@ RUN npm ci --quiet && npm run build
 FROM node:14
 
 WORKDIR /app
-ENV NODE_ENV=development
 
 COPY package*.json ./
 COPY .npmrc ./
@@ -34,5 +33,5 @@ RUN npm ci --quiet --only=production
 
 ## We just need the build to execute the command
 COPY --from=builder /usr/src/app ./build
-EXPOSE 3000 3306
+EXPOSE 8080 3306
 CMD [ "node", "build/dist/src/index.js" ]
