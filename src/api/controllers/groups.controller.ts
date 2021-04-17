@@ -19,9 +19,6 @@ export const create = (req: Request, res: Response) => {
       .json({ data });
   }).catch((err: ValidationError) => {
     res.status(httpStatus.BAD_REQUEST).json({ errors: err.message.split('\n') });
-  }).catch((err) => {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({ error: err });
   });
 };
 
@@ -34,9 +31,6 @@ export const findAll = (req: Request, res: Response) => {
   const { companyId } = req.params;
   Group.findAll({ where: { companyId } }).then((data) => {
     res.status(httpStatus.OK).json({ data });
-  }).catch((err) => {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({ error: err });
   });
 };
 
@@ -51,9 +45,6 @@ export const findById = (req: Request, res: Response) => {
   Group.findOne({ where: { companyId, id: groupId } }).then((data) => {
     res.status(httpStatus.OK)
       .json({ data });
-  }).catch((err) => {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({ err: err.message });
   });
 };
 
@@ -76,9 +67,6 @@ export const update = (req: Request, res: Response) => {
       .json();
   }).catch((err: ValidationError) => {
     res.status(httpStatus.BAD_REQUEST).json({ errors: err.message.split('\n') });
-  }).catch((err) => {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({ error: err });
   });
 };
 
