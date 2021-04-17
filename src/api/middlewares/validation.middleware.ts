@@ -1,24 +1,9 @@
-import { body, validationResult } from 'express-validator';
+import { validationResult } from 'express-validator';
 import {
   Request, Response, NextFunction,
 } from 'express';
 import httpStatus from 'http-status';
 import { APIError } from '../utils/errors';
-
-/**
- * Validate if the body params are valid
- * @returns array of validations
- */
-export const createNew = () => [
-  body('name')
-    .notEmpty().withMessage('Name field must be required')
-    .matches(/^[A-Za-z ]+$/)
-    .withMessage('Name must be valid'),
-  body('description')
-    .notEmpty().withMessage('Description field must be required')
-    .matches(/^[A-Za-z ]+$/)
-    .withMessage('Description must be valid'),
-];
 
 /**
  * Validate the input in requests

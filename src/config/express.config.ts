@@ -3,7 +3,7 @@ import morgan from 'morgan';
 import httpStatus from 'http-status';
 import router from '../api/routes';
 import { winstonStream } from './winston.config';
-import { errorHandler } from '../api/middlewares/errors.middleware';
+import { errorHandler } from '../api/middlewares';
 import { APIError } from '../api/utils/errors';
 
 /**

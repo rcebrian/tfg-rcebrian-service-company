@@ -2,7 +2,8 @@ import { Router } from 'express';
 import {
   create, findAll, findById, remove, update,
 } from '../controllers/groups.controller';
-import { createNew, validator } from '../middlewares/validation.middleware';
+import { createNew } from '../validations';
+import { validator } from '../middlewares';
 
 const router = Router();
 
