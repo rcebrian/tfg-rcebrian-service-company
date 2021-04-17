@@ -25,8 +25,8 @@ describe('CONTROLLER /company', () => {
 
     it('should be 400 - BAD REQUEST', async () => {
       const result = await request(app).post(URI).send({ });
-      expect(result.body).toHaveProperty('errors');
-      expect(result.body.errors).toHaveLength(2);
+      expect(result.body.error).toHaveProperty('errors');
+      expect(result.body.error.errors).toHaveLength(4);
       expect(result.status).toBe(httpStatus.BAD_REQUEST);
     });
   });

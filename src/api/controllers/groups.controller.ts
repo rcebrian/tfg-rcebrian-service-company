@@ -65,8 +65,6 @@ export const update = (req: Request, res: Response) => {
   ).then(() => {
     res.status(httpStatus.ACCEPTED)
       .json();
-  }).catch((err: ValidationError) => {
-    res.status(httpStatus.BAD_REQUEST).json({ errors: err.message.split('\n') });
   });
 };
 
@@ -81,8 +79,5 @@ export const remove = (req: Request, res: Response) => {
   Group.destroy({ where: { companyId, id: groupId } }).then((data) => {
     res.status(httpStatus.NO_CONTENT)
       .json({ data });
-  }).catch((err) => {
-    res.status(httpStatus.INTERNAL_SERVER_ERROR)
-      .json({ err: err.message });
   });
 };

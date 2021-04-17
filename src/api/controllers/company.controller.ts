@@ -1,6 +1,5 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
-import { ValidationError } from 'sequelize';
 import { Company } from '../repository/mysql/mysql.repository';
 
 export const create = (req: Request, res: Response) => {
@@ -10,8 +9,6 @@ export const create = (req: Request, res: Response) => {
   }).then((data) => {
     res.status(httpStatus.CREATED)
       .json({ data });
-  }).catch((err: ValidationError) => {
-    res.status(httpStatus.BAD_REQUEST).json({ errors: err.message.split('\n') });
   });
 };
 
@@ -23,7 +20,8 @@ export const create = (req: Request, res: Response) => {
 export const findAll = (req: Request, res: Response) => {
   Company.findAll()
     .then((data) => {
-      res.status(httpStatus.OK).json({ data });
+      res.status(httpStatus.OK)
+        .json({ data });
     });
 };
 
