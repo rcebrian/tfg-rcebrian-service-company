@@ -4,6 +4,7 @@ import httpStatus from 'http-status';
 import router from '../api/routes';
 import { winstonStream } from './winston.config';
 import { errorHandler } from '../api/middlewares/errors.middleware';
+import { APIError } from '../api/utils/errors';
 
 /**
  * Express instance
@@ -20,7 +21,7 @@ app.use('/api', router);
 app.use(errorHandler);
 
 app.get('*', (req: Request, res: Response) => {
-  res.status(httpStatus.NOT_FOUND).json();
+  throw new APIError({ message: 'Not found', status: httpStatus.NOT_FOUND });
 });
 
 export = app;
