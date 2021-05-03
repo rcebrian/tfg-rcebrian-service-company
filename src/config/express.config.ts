@@ -21,7 +21,6 @@ app.use(cors({
   optionsSuccessStatus: 200,
 }));
 
-
 app.use(json());
 
 app.use('/api', router);
