@@ -1,5 +1,5 @@
-import { Group, User, UsersGroups } from '@rcebrian/tfg-rcebrian-domain';
 import { body, param } from 'express-validator';
+import { Group, User, UsersGroups } from '../repository/mysql/mysql.repository';
 
 /**
  * Validate if the body params are valid
