@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
-import { Company, Group } from '../repository/mysql/mysql.repository';
+import { Company } from '../repository/mysql/mysql.repository';
 
 export const create = (req: Request, res: Response) => {
   Company.create({
