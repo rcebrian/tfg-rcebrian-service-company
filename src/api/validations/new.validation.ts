@@ -6,11 +6,7 @@ import { body } from 'express-validator';
  */
 export const createNew = () => [
   body('name')
-    .notEmpty().withMessage('Name field must be required')
-    .matches(/^[A-Za-z ]+$/)
-    .withMessage('Name must be valid'),
+    .notEmpty().withMessage('Name field must be required'),
   body('description')
-    .notEmpty().withMessage('Description field must be required')
-    .matches(/^[A-Za-z ]+$/)
-    .withMessage('Description must be valid'),
+    .notEmpty().withMessage('Description field must be required'),
 ];
