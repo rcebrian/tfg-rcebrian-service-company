@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
-import { Company } from '../repository/mysql/mysql.repository';
+import { Company, Group, UsersGroups } from '../repository/mysql/mysql.repository';
 
 export const create = (req: Request, res: Response) => {
   Company.create({
@@ -73,15 +73,36 @@ export const remove = (req: Request, res: Response) => {
   });
 };
 
+const companyToTreeNode = (company: any) => ((company) ? {
+  data: {
+    id: company.id,
+    kind: 'company',
+    name: company.name,
+    description: company.description,
+  },
+  children: company.groups.map((item: any) => ({ data: { kind: 'group', ...item } })),
+} : {});
+
 /**
  * Return full info of a company
  * @param req GET method
  * @param res OK
  */
-export const findAllCompanyTree = (req: Request, res: Response) => {
-  Company.scope('tree').findAll().then((data: any) => {
-    res.status(httpStatus.OK).json({ data });
+export const findAllCompanyTree = async (req: Request, res: Response) => {
+  const companies = await Company.findAll({
+    order: [['createdAt', 'ASC']],
+    include: Group,
   });
+
+  const result: Array<any> = [];
+
+  if (companies) {
+    companies.forEach((company) => {
+      result.push(companyToTreeNode(company.toJSON()));
+    });
+  }
+
+  res.status(httpStatus.OK).json(result);
 };
 
 /**
@@ -89,14 +110,18 @@ export const findAllCompanyTree = (req: Request, res: Response) => {
  * @param req GET method
  * @param res OK
  */
-export const findByIdCompanyTree = (req: Request, res: Response) => {
+export const findByIdCompanyTree = async (req: Request, res: Response) => {
   const { companyId } = req.params;
 
-  Company.scope('tree').findOne({
+  const company = await Company.findOne({
     where: {
       id: companyId,
     },
-  }).then((data: any) => {
-    res.status(httpStatus.OK).json({ data });
+    order: [['createdAt', 'ASC']],
+    include: Group,
   });
+
+  const result = (company) ? companyToTreeNode(company.toJSON()) : {};
+
+  res.status(httpStatus.OK).json(result);
 };
