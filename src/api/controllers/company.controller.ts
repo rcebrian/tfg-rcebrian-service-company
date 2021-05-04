@@ -1,12 +1,12 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
-import { Company } from '../repository/mysql/mysql.repository';
+import { Company, Group } from '../repository/mysql/mysql.repository';
 
 export const create = (req: Request, res: Response) => {
   Company.create({
     name: req.body.name,
     description: req.body.description,
-  }).then((data) => {
+  }).then((data: any) => {
     res.status(httpStatus.CREATED)
       .json({ data });
   });
@@ -19,7 +19,7 @@ export const create = (req: Request, res: Response) => {
  */
 export const findAll = (req: Request, res: Response) => {
   Company.findAll()
-    .then((data) => {
+    .then((data: any) => {
       res.status(httpStatus.OK)
         .json({ data });
     });
@@ -33,7 +33,7 @@ export const findAll = (req: Request, res: Response) => {
 export const findById = (req: Request, res: Response) => {
   const { id } = req.params;
 
-  Company.findOne({ where: { id } }).then((data) => {
+  Company.findOne({ where: { id } }).then((data: any) => {
     res.status(httpStatus.OK)
       .json({ data });
   });
@@ -67,8 +67,36 @@ export const update = (req: Request, res: Response) => {
 export const remove = (req: Request, res: Response) => {
   const { id } = req.params;
 
-  Company.destroy({ where: { id } }).then((data) => {
+  Company.destroy({ where: { id } }).then((data: any) => {
     res.status(httpStatus.NO_CONTENT)
       .json({ data });
+  });
+};
+
+/**
+ * Return full info of a company
+ * @param req GET method
+ * @param res OK
+ */
+export const findAllCompanyTree = (req: Request, res: Response) => {
+  Company.scope('tree').findAll().then((data: any) => {
+    res.status(httpStatus.OK).json({ data });
+  });
+};
+
+/**
+ * Return full info of an specific company
+ * @param req GET method
+ * @param res OK
+ */
+export const findByIdCompanyTree = (req: Request, res: Response) => {
+  const { companyId } = req.params;
+
+  Company.scope('tree').findOne({
+    where: {
+      id: companyId,
+    },
+  }).then((data: any) => {
+    res.status(httpStatus.OK).json({ data });
   });
 };
