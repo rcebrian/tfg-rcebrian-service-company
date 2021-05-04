@@ -1,6 +1,5 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
-import { ValidationError } from 'sequelize';
 import { Group, UsersGroups } from '../repository/mysql/mysql.repository';
 
 /**
@@ -17,8 +16,6 @@ export const create = (req: Request, res: Response) => {
   }).then((data: any) => {
     res.status(httpStatus.CREATED)
       .json({ data });
-  }).catch((err: ValidationError) => {
-    res.status(httpStatus.BAD_REQUEST).json({ errors: err.message.split('\n') });
   });
 };
 
@@ -88,7 +85,7 @@ export const remove = (req: Request, res: Response) => {
  * @param res CREATED
  */
 export const addUserToGroup = async (req: Request, res: Response) => {
-  const { companyId, groupId } = req.params;
+  const { groupId } = req.params;
 
   const { userId } = req.body;
 
