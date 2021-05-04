@@ -1,7 +1,7 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
 import { ValidationError } from 'sequelize';
-import { Group } from '../repository/mysql/mysql.repository';
+import { Group, UsersGroups } from '../repository/mysql/mysql.repository';
 
 /**
  * Create a new group in a company
@@ -80,4 +80,20 @@ export const remove = (req: Request, res: Response) => {
     res.status(httpStatus.NO_CONTENT)
       .json({ data });
   });
+};
+
+/**
+ * Add a user to an existing group
+ * @param req PUT valid user
+ * @param res CREATED
+ */
+export const addUserToGroup = async (req: Request, res: Response) => {
+  const { companyId, groupId } = req.params;
+
+  const { userId } = req.body;
+
+  Group.create({ userId, groupId })
+    .then((data) => {
+      res.status(httpStatus.CREATED).json({ data });
+    });
 };
