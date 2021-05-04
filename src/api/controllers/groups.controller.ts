@@ -14,7 +14,7 @@ export const create = (req: Request, res: Response) => {
     name: req.body.name,
     description: req.body.description,
     companyId,
-  }).then((data) => {
+  }).then((data: any) => {
     res.status(httpStatus.CREATED)
       .json({ data });
   }).catch((err: ValidationError) => {
@@ -29,7 +29,7 @@ export const create = (req: Request, res: Response) => {
  */
 export const findAll = (req: Request, res: Response) => {
   const { companyId } = req.params;
-  Group.findAll({ where: { companyId } }).then((data) => {
+  Group.findAll({ where: { companyId } }).then((data: any) => {
     res.status(httpStatus.OK).json({ data });
   });
 };
@@ -42,7 +42,7 @@ export const findAll = (req: Request, res: Response) => {
 export const findById = (req: Request, res: Response) => {
   const { companyId, groupId } = req.params;
 
-  Group.findOne({ where: { companyId, id: groupId } }).then((data) => {
+  Group.findOne({ where: { companyId, id: groupId } }).then((data: any) => {
     res.status(httpStatus.OK)
       .json({ data });
   });
@@ -76,7 +76,7 @@ export const update = (req: Request, res: Response) => {
 export const remove = (req: Request, res: Response) => {
   const { companyId, groupId } = req.params;
 
-  Group.destroy({ where: { companyId, id: groupId } }).then((data) => {
+  Group.destroy({ where: { companyId, id: groupId } }).then((data: any) => {
     res.status(httpStatus.NO_CONTENT)
       .json({ data });
   });
@@ -92,8 +92,8 @@ export const addUserToGroup = async (req: Request, res: Response) => {
 
   const { userId } = req.body;
 
-  Group.create({ userId, groupId })
-    .then((data) => {
+  UsersGroups.create({ userId, groupId })
+    .then((data: any) => {
       res.status(httpStatus.CREATED).json({ data });
     });
 };
