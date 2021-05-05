@@ -79,8 +79,10 @@ const companyToTreeNode = (company: any) => ((company) ? {
     kind: 'company',
     name: company.name,
     description: company.description,
+    size: company.groups.length,
   },
   children: company.groups.map((item: any) => ({ data: { kind: 'group', ...item } })),
+  expanded: (company.groups.length) > 0,
 } : {});
 
 /**
