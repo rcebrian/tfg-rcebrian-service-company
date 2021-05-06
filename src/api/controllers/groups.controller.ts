@@ -106,6 +106,11 @@ export const addUserToGroup = async (req: Request, res: Response) => {
     });
 };
 
+/**
+ * Generate a TreeNode object from a group
+ * @param group with users
+ * @returns group as a TreeNode
+ */
 const groupToTreeNode = (group: any) => ((group) ? [{
   data: {
     id: group.id,
@@ -125,6 +130,11 @@ const groupToTreeNode = (group: any) => ((group) ? [{
   expanded: (group.users.length) > 0,
 }] : [{}]);
 
+/**
+ * Return the info of a group as a TreeNode
+ * @param req GET :groupId
+ * @param res
+ */
 export const groupTree = async (req: Request, res: Response) => {
   const { groupId } = req.params;
 
