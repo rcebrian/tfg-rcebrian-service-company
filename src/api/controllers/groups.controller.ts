@@ -32,7 +32,7 @@ export const findAll = async (req: Request, res: Response) => {
 
   const payload: any = decoded?.payload;
 
-  const groups: any = await User.findAll(
+  const groups: any = await User.findOne(
     {
       where: { id: payload?.id },
       include: [Group],
