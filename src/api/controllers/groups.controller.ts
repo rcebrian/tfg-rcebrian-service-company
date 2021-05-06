@@ -105,3 +105,37 @@ export const addUserToGroup = async (req: Request, res: Response) => {
       res.status(httpStatus.CREATED).json({ data });
     });
 };
+
+const groupToTreeNode = (group: any) => ((group) ? [{
+  data: {
+    id: group.id,
+    kind: 'group',
+    name: group.name,
+    description: group.description,
+    size: group.users.length,
+  },
+  children: group.users.map((item: any) => ({
+    data: {
+      id: item.id,
+      name: `${item.firstName} ${item.lastName}`,
+      description: item.email,
+      kind: item.role.name.replace('ROLE_', ''),
+    },
+  })),
+  expanded: (group.users.length) > 0,
+}] : [{}]);
+
+export const groupTree = async (req: Request, res: Response) => {
+  const { groupId } = req.params;
+
+  const group = await Group.findOne({
+    where: {
+      id: groupId,
+    },
+    include: User,
+  });
+
+  const result = (group) ? groupToTreeNode(group.toJSON()) : {};
+
+  res.status(httpStatus.OK).json(result);
+};
