@@ -1,6 +1,7 @@
 import httpStatus from 'http-status';
 import { Request, Response } from 'express';
-import { Group, UsersGroups } from '../repository/mysql/mysql.repository';
+import * as jwt from 'jsonwebtoken';
+import { Group, User, UsersGroups } from '../repository/mysql/mysql.repository';
 
 /**
  * Create a new group in a company
@@ -24,11 +25,21 @@ export const create = (req: Request, res: Response) => {
  * @param req GET method
  * @param res List of groups inside a company
  */
-export const findAll = (req: Request, res: Response) => {
-  const { companyId } = req.params;
-  Group.findAll({ where: { companyId } }).then((data: any) => {
-    res.status(httpStatus.OK).json({ data });
-  });
+export const findAll = async (req: Request, res: Response) => {
+  const token: any = req.headers.authorization?.replace('Bearer ', '');
+
+  const decoded = jwt.decode(token, { complete: true });
+
+  const payload: any = decoded?.payload;
+
+  const groups: any = await User.findAll(
+    {
+      where: { id: payload?.id },
+      include: [Group],
+    },
+  );
+
+  res.status(httpStatus.OK).json({ data: groups });
 };
 
 /**

@@ -5,6 +5,6 @@ import { groupsRoutes } from './groups.route';
 const router = Router();
 
 router.use('/company', companyRoutes);
-router.use('/company', groupsRoutes);
+router.use('/company/groups', groupsRoutes);
 
 export default router;
