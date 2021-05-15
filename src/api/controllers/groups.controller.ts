@@ -1,5 +1,5 @@
 import httpStatus from 'http-status';
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Group, User, UsersGroups } from '../repository/mysql/mysql.repository';
 
@@ -8,16 +8,15 @@ import { Group, User, UsersGroups } from '../repository/mysql/mysql.repository';
  * @param req POST method
  * @param res List of groups inside a company
  */
-export const create = (req: Request, res: Response) => {
-  const { companyId } = req.params;
+export const create = (req: Request, res: Response, next: NextFunction) => {
   Group.create({
     name: req.body.name,
     description: req.body.description,
-    companyId,
+    companyId: req.body.companyId,
   }).then((data: any) => {
     res.status(httpStatus.CREATED)
       .json({ data });
-  });
+  }).catch((err) => next(err));
 };
 
 /**
