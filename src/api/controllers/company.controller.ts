@@ -1,14 +1,23 @@
 import httpStatus from 'http-status';
-import { Request, Response } from 'express';
-import { Company, Group, UsersGroups } from '../repository/mysql/mysql.repository';
+import { NextFunction, Request, Response } from 'express';
+import { Company, Group } from '../repository/mysql/mysql.repository';
+import logger from '../../config/winston.config';
 
-export const create = (req: Request, res: Response) => {
+/**
+ * Create a new company in database
+ * @param req company data
+ * @param res 201 - Created
+ * @param next request
+ */
+export const create = (req: Request, res: Response, next: NextFunction) => {
   Company.create({
     name: req.body.name,
     description: req.body.description,
   }).then((data: any) => {
-    res.status(httpStatus.CREATED)
-      .json({ data });
+    res.status(httpStatus.CREATED).json({ data });
+  }).catch((err: any) => {
+    logger.error(err.stack);
+    next(err);
   });
 };
 
@@ -16,13 +25,16 @@ export const create = (req: Request, res: Response) => {
  * Get all companies from database
  * @param req GET method
  * @param res List of companies
+ * @param next request
  */
-export const findAll = (req: Request, res: Response) => {
-  Company.findAll()
-    .then((data: any) => {
-      res.status(httpStatus.OK)
-        .json({ data });
-    });
+export const findAll = (req: Request, res: Response, next: NextFunction) => {
+  Company.findAll(
+  ).then((data: any) => {
+    res.status(httpStatus.OK).json({ data });
+  }).catch((err: any) => {
+    logger.error(err.stack);
+    next(err);
+  });
 };
 
 /**
@@ -44,7 +56,7 @@ export const findById = (req: Request, res: Response) => {
  * @param req PUT method with company id as path param
  * @param res ACCEPTED company with new attributes
  */
-export const update = (req: Request, res: Response) => {
+export const update = (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
   const company = req.body;
   Company.update(
@@ -54,8 +66,10 @@ export const update = (req: Request, res: Response) => {
     },
     { where: { id } },
   ).then(() => {
-    res.status(httpStatus.ACCEPTED)
-      .json();
+    res.status(httpStatus.ACCEPTED).json();
+  }).catch((err: any) => {
+    logger.error(err.stack);
+    next(err);
   });
 };
 
@@ -64,12 +78,16 @@ export const update = (req: Request, res: Response) => {
  * @param req DELETE method with company id as path param
  * @param res NO CONTENT
  */
-export const remove = (req: Request, res: Response) => {
+export const remove = (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
-  Company.destroy({ where: { id } }).then((data: any) => {
-    res.status(httpStatus.NO_CONTENT)
-      .json({ data });
+  Company.destroy(
+    { where: { id } },
+  ).then((data: any) => {
+    res.status(httpStatus.NO_CONTENT).json({ data });
+  }).catch((err: any) => {
+    logger.error(err.stack);
+    next(err);
   });
 };
 
