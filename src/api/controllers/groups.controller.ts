@@ -135,19 +135,24 @@ const groupToTreeNode = (group: any) => ((group) ? [{
 /**
  * Return the info of a group as a TreeNode
  * @param req GET :groupId
- * @param res
+ * @param res 200 - OK
+ * @param next request
  */
-export const groupTree = async (req: Request, res: Response) => {
-  const { groupId } = req.params;
+export const groupTree = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { groupId } = req.params;
+    const group = await Group.findOne({
+      where: {
+        id: groupId,
+      },
+      include: User,
+    });
 
-  const group = await Group.findOne({
-    where: {
-      id: groupId,
-    },
-    include: User,
-  });
+    const result = (group) ? groupToTreeNode(group.toJSON()) : {};
 
-  const result = (group) ? groupToTreeNode(group.toJSON()) : {};
-
-  res.status(httpStatus.OK).json(result);
+    res.status(httpStatus.OK).json(result);
+  } catch (err) {
+    logger.error(err.stack);
+    next(err);
+  }
 };
