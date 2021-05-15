@@ -2,6 +2,7 @@ import httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
 import * as jwt from 'jsonwebtoken';
 import { Group, User, UsersGroups } from '../repository/mysql/mysql.repository';
+import logger from '../../config/winston.config';
 
 /**
  * Create a new group in a company
@@ -14,9 +15,11 @@ export const create = (req: Request, res: Response, next: NextFunction) => {
     description: req.body.description,
     companyId: req.body.companyId,
   }).then((data: any) => {
-    res.status(httpStatus.CREATED)
-      .json({ data });
-  }).catch((err) => next(err));
+    res.status(httpStatus.CREATED).json({ data });
+  }).catch((err: any) => {
+    logger.error(err.stack);
+    next(err);
+  });
 };
 
 /**
