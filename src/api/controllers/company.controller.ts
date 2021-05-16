@@ -159,19 +159,31 @@ export const findAllCompanyTree = async (req: Request, res: Response) => {
  * Return full info of an specific company
  * @param req GET method
  * @param res OK
+ * @param next request
  */
-export const findByIdCompanyTree = async (req: Request, res: Response) => {
+export const findByIdCompanyTree = (req: Request, res: Response, next: NextFunction) => {
   const { companyId } = req.params;
 
-  const company = await Company.findOne({
+  Company.findOne({
     where: {
       id: companyId,
     },
     order: [['createdAt', 'ASC']],
     include: Group,
+  }).then((data) => {
+    if (!data) {
+      throw new APIError({
+        message: 'Not found',
+        status: httpStatus.NOT_FOUND,
+        stack: `Can't find company. Company [${companyId}] not exists`,
+      });
+    }
+
+    const result = (data) ? companyToTreeNode(data.toJSON()) : {};
+
+    res.status(httpStatus.OK).json(result);
+  }).catch((err) => {
+    logger.error(err.stack);
+    next(err);
   });
-
-  const result = (company) ? companyToTreeNode(company.toJSON()) : {};
-
-  res.status(httpStatus.OK).json(result);
 };
