@@ -14,7 +14,7 @@ router.route('/').post(auth, roleAdmin, createNew(), validatorHandler, create);
 
 router.route('/:companyId([0-9]+)/tree').get(auth, roleAdmin, findByIdCompanyTree);
 // router.route('/:id([0-9]+)').get(auth, roleAdmin, findById); // deprecated
-router.route('/:id([0-9]+)').put(auth, roleAdmin, createNew(), validatorHandler, update);
-router.route('/:id([0-9]+)').delete(auth, roleAdmin, remove);
+router.route('/:companyId([0-9]+)').put(auth, roleAdmin, createNew(), validatorHandler, update);
+router.route('/:companyId([0-9]+)').delete(auth, roleAdmin, remove);
 
 export { router as companyRoutes };

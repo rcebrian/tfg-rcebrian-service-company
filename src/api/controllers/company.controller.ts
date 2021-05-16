@@ -1,5 +1,6 @@
 import httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
+import { APIError } from '@rcebrian/tfg-rcebrian-common';
 import { Company, Group } from '../repository/mysql/mysql.repository';
 import logger from '../../config/winston.config';
 
@@ -42,7 +43,7 @@ export const findAll = (req: Request, res: Response, next: NextFunction) => {
  * @param req GET method with company id as path param
  * @param res one company or empty
  */
-export const findById = (req: Request, res: Response) => {
+export const findById = (req: Request, res: Response, next: NextFunction) => {
   const { id } = req.params;
 
   Company.findOne({ where: { id } }).then((data: any) => {
@@ -57,17 +58,32 @@ export const findById = (req: Request, res: Response) => {
  * @param res ACCEPTED company with new attributes
  */
 export const update = (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
+  const { companyId } = req.params;
   const company = req.body;
-  Company.update(
-    {
-      name: company.name,
-      description: company.description,
-    },
-    { where: { id } },
-  ).then(() => {
-    res.status(httpStatus.ACCEPTED).json();
-  }).catch((err: any) => {
+
+  Company.findOne(
+    { where: { id: companyId } },
+  ).then((user) => {
+    if (!user) {
+      throw new APIError({
+        message: 'Not found',
+        status: httpStatus.NOT_FOUND,
+        stack: `Can't delete company. Company [${companyId}] not exists`,
+      });
+    }
+    Company.update(
+      {
+        name: company.name,
+        description: company.description,
+      },
+      { where: { id: companyId } },
+    ).then(() => {
+      res.status(httpStatus.ACCEPTED).json();
+    }).catch((err: any) => {
+      logger.error(err.stack);
+      next(err);
+    });
+  }).catch((err) => {
     logger.error(err.stack);
     next(err);
   });
@@ -77,15 +93,29 @@ export const update = (req: Request, res: Response, next: NextFunction) => {
  * Delete a company from database filtered by id
  * @param req DELETE method with company id as path param
  * @param res NO CONTENT
+ * @param next request
  */
 export const remove = (req: Request, res: Response, next: NextFunction) => {
-  const { id } = req.params;
+  const { companyId } = req.params;
 
-  Company.destroy(
-    { where: { id } },
-  ).then((data: any) => {
-    res.status(httpStatus.NO_CONTENT).json({ data });
-  }).catch((err: any) => {
+  Company.findOne(
+    { where: { id: companyId } },
+  ).then((user) => {
+    if (!user) {
+      throw new APIError({
+        message: 'Not found',
+        status: httpStatus.NOT_FOUND,
+        stack: `Can't delete company. Company [${companyId}] not exists`,
+      });
+    }
+    Company.destroy({ where: { id: companyId } })
+      .then((data) => {
+        res.status(httpStatus.NO_CONTENT).json({ data });
+      }).catch((err) => {
+        logger.error(err.stack);
+        next(err);
+      });
+  }).catch((err) => {
     logger.error(err.stack);
     next(err);
   });
