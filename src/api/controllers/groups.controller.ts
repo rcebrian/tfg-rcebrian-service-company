@@ -106,7 +106,7 @@ export const addUserToGroup = async (req: Request, res: Response) => {
 };
 
 /**
- * Generate a TreeNode object from a group
+ * Generate a TreeNode object from a group with users
  * @param group with users
  * @returns group as a TreeNode
  */
