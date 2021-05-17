@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
-import * as jwt from 'jsonwebtoken';
+import { TokenPropertiesEnum, getPropertyFromBearerToken } from '@rcebrian/tfg-rcebrian-common';
 import { Group, User, UsersGroups } from '../repository/mysql/mysql.repository';
 import logger from '../../config/winston.config';
 
@@ -27,21 +27,18 @@ export const create = (req: Request, res: Response, next: NextFunction) => {
  * @param req GET method
  * @param res List of groups inside a company
  */
-export const findAll = async (req: Request, res: Response) => {
-  const token: any = req.headers.authorization?.replace('Bearer ', '');
+export const findAll = (req: Request, res: Response, next: NextFunction) => {
+  const userId = getPropertyFromBearerToken(req.headers, TokenPropertiesEnum.ID);
 
-  const decoded = jwt.decode(token, { complete: true });
-
-  const payload: any = decoded?.payload;
-
-  const groups: any = await User.findOne(
-    {
-      where: { id: payload?.id },
-      include: [Group],
-    },
-  );
-
-  res.status(httpStatus.OK).json({ data: groups });
+  User.findOne({
+    where: { id: userId },
+    include: [Group],
+  }).then((data) => {
+    res.status(httpStatus.OK).json({ data });
+  }).catch((err) => {
+    logger.error(err.stack);
+    next(err);
+  });
 };
 
 /**
