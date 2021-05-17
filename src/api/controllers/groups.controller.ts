@@ -1,6 +1,6 @@
 import httpStatus from 'http-status';
 import { NextFunction, Request, Response } from 'express';
-import { TokenPropertiesEnum, getPropertyFromBearerToken } from '@rcebrian/tfg-rcebrian-common';
+import { TokenPropertiesEnum, getPropertyFromBearerToken, APIError } from '@rcebrian/tfg-rcebrian-common';
 import { Group, User, UsersGroups } from '../repository/mysql/mysql.repository';
 import logger from '../../config/winston.config';
 
@@ -135,21 +135,29 @@ const groupToTreeNode = (group: any) => ((group) ? [{
  * @param res 200 - OK
  * @param next request
  */
-export const groupTree = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const { groupId } = req.params;
-    const group = await Group.findOne({
-      where: {
-        id: groupId,
-      },
-      include: User,
-    });
+export const groupTree = (req: Request, res: Response, next: NextFunction) => {
+  const { groupId } = req.params;
 
-    const result = (group) ? groupToTreeNode(group.toJSON()) : {};
+  Group.findOne({
+    where: {
+      id: groupId,
+    },
+    order: [['createdAt', 'ASC']],
+    include: User,
+  }).then((data) => {
+    if (!data) {
+      throw new APIError({
+        message: 'Not found',
+        status: httpStatus.NOT_FOUND,
+        stack: `Can't find group. Group [${groupId}] not exists`,
+      });
+    }
+
+    const result = (data) ? groupToTreeNode(data.toJSON()) : {};
 
     res.status(httpStatus.OK).json(result);
-  } catch (err) {
+  }).catch((err) => {
     logger.error(err.stack);
     next(err);
-  }
+  });
 };
