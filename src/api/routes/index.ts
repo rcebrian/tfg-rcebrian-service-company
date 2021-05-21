@@ -1,8 +1,10 @@
 import { Router } from 'express';
-import { exampleRoutes } from './example.route';
+import { companyRoutes } from './company.route';
+import { groupsRoutes } from './groups.route';
 
 const router = Router();
 
-router.use('/example', exampleRoutes);
+router.use('/company', companyRoutes);
+router.use('/company/groups', groupsRoutes);
 
 export default router;
